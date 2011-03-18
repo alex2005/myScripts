@@ -4,13 +4,16 @@ use strict;
 
 my $escapedir;
 my $depth = 0;
+my $debug = 1;
 
 # von welchen verzeichnissen
-my @names = qw(/home/dorn/mp3/jd/);
+#my @names = qw(/volume1/music/specials/ /volume1/music/mp31/ /volume1/music/mp32/ /volume1/music/mp33/);
+my @names = qw(/data/bck/testmp3/mp31/ /data/bck/testmp3/mp32/);
 # wohin
-my $zieldir = "/home/dorn/temp/musik/";
-# nicht diese verzeichnisse
-my @ddir = qw(@eaDir hoerspiele karaoke wii bresslufd);
+#my $zieldir = "/volume1/s100";
+my $zieldir = "/data/bck/s100/";
+# nicht diese verzeichnisse teilnamen gehen auch!
+my @ddir = qw(@eaDir hoerspiele karaoke benjamin_bluemchen);
 
 # damit kann man die relative ../ pfade erhoehen/erniedrigen 0 = ../../../
 my $reldir = 0;
@@ -65,7 +68,7 @@ sub recurse {
   $depth += 1;
   
   ## print the directory being searched
-  #print $path," - ", $pdir, "\n";
+  #print "### ", $path," - ", $pdir, "\n";
 
   ## loop through the files contained in the directory
   for my $eachFile (glob($path.'*')) {
@@ -76,7 +79,13 @@ sub recurse {
       ## pass the directory to the routine &( recursion )
 
       my @newdir = split (/$escapedir/, $eachFile);
-      print "### mkdir \"".mknicename($newdir[1])."\"\n";
+      my $tmpdirname = mknicename($newdir[1]);
+      
+      if ( $debug) { 
+      	print "### mkdir \"".$zieldir.$tmpdirname."\"\n";
+	} else {
+      	my $mk_dir = qx(mkdir -p "$zieldir$tmpdirname");
+	}
       recurse($eachFile, $newdir[1]);
     } else {
 	    if( not ( inarray($eachFile) ) and ( $eachFile =~ m/\.(mp3|MP3|ogg|jpg)/ ) ) {
@@ -85,8 +94,13 @@ sub recurse {
       		my @newdir = split (/$escapedir/, $eachFile);
       		my @filename = split (/$pdir\//, $newdir[1]);
 		
-	      #zu lang print "\tln -s \"",dots($depth),mknicename($pdir),"\/", $filename[1] ,"\" \"" ,$zieldir,  $newdir[1],"\"", "\n";
-	      print "\tln to \"",dots($depth),mknicename($pdir),"\/", $filename[1],"\"\n";
+	      my $lnsource = dots($depth).$pdir."\/".$filename[1];
+	      my $lndest = $zieldir.mknicename($newdir[1]);
+	      if ( $debug) { 
+		print "\tln -s $escapedir ".$lnsource." $lndest\n";
+		} else {
+      		my $mk_ln = qx(ln -s "$lnsource" "$lndest"); 
+		}
 	      $counter++;
 	      }
     }
