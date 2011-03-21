@@ -9,12 +9,14 @@ my $debug = 1;
 
 # von welchen verzeichnissen
 #my @names = qw(/volume1/music/specials/ /volume1/music/mp31/ /volume1/music/mp32/ /volume1/music/mp33/);
-my @names = qw(/data/bck/testmp3/mp31/ /data/bck/testmp3/mp32/);
+#my @names = qw(/data/bck/testmp3/mp31/ /data/bck/testmp3/mp32/);
+my @names = qw(/home/dorn/mp3/jd/);
 # wohin
-#my $zieldir = "/volume1/s100";
-my $zieldir = "/data/bck/s100/";
+#my $zieldir = "/volume1/s100/";
+#my $zieldir = "/data/bck/s100/";
+my $zieldir = "/home/dorn/temp/s100/";
 # nicht diese verzeichnisse teilnamen gehen auch!
-my @ddir = qw(@eaDir hoerspiele karaoke benjamin_bluemchen);
+my @ddir = qw(@eaDir hoerspiele karaoke benjamin_bluemchen wii);
 
 # link zaehler
 my $counter = 0;
