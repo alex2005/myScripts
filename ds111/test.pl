@@ -5,7 +5,6 @@ use strict;
 require File::Spec::Unix; # Done automatically by File::Spec
 
 my $escapedir;
-my $depth = 0;
 my $debug = 1;
 
 # von welchen verzeichnissen
@@ -17,8 +16,6 @@ my $zieldir = "/data/bck/s100/";
 # nicht diese verzeichnisse teilnamen gehen auch!
 my @ddir = qw(@eaDir hoerspiele karaoke benjamin_bluemchen);
 
-# damit kann man die relative ../ pfade erhoehen/erniedrigen 0 = ../../../
-my $reldir = 0;
 # link zaehler
 my $counter = 0;
 
@@ -57,7 +54,6 @@ sub recurse {
 
   ## append a trailing / if it's not there
   $path .= '/' if($path !~ /\/$/);
-  $depth += 1;
   
   ## print the directory being searched
   #print "### ", $path," - ", $pdir, "\n";
@@ -66,7 +62,6 @@ sub recurse {
   for my $eachFile (glob($path.'*')) {
 
     ## if the file is a directory
-#    if( -d $eachFile and not ( $eachFile =~ m/\@eaDir/ ) ) {
     if( -d $eachFile and not ( inarray($eachFile) ) ) {
       ## pass the directory to the routine &( recursion )
 
@@ -87,10 +82,14 @@ sub recurse {
       		my @filename = split (/$pdir\//, $newdir[1]);
 		
 	      my $lnsource = $pdir."\/".$filename[1];
-	      my $lndest = $zieldir.mknicename($newdir[1]);
+	      my ($volume,$directories,$fileX) = File::Spec::Unix->splitpath( $eachFile );
+	      my @path = split (/\/$fileX/, $newdir[1]);
+	      my $lndest = $zieldir.mknicename($path[0])."/".$fileX;
+	      #my $lndest = $zieldir.$filename[1];
+	      my $rel_path = File::Spec::Unix->abs2rel( $names[$n], $pdir ) ;
 	      if ( $debug) { 
-		my $rel_path = File::Spec::Unix->abs2rel( $names[$n], $pdir ) ;
-		#print "\tRelPath: ".$rel_path."\n";
+	        #print "###\n\teachFile: $eachFile\n\tFilename: $filename[1]\n\tnewdir[1]: $newdir[1]\n";
+	        #print "\tvolume: $volume\n\tdirs: $directories\n\tfile: $path[0]\n\trepath: $rel_path\n";
 		print "\tln -s \"$rel_path/$lnsource\" \"$lndest\"\n";
 		} else {
       		my $mk_ln = qx(ln -s "$rel_path/$lnsource" "$lndest"); 
@@ -99,7 +98,6 @@ sub recurse {
 	      }
     }
   }
-  $depth -= 1;
 }
 
 while ($names[$n]) {
