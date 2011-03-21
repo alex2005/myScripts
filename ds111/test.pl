@@ -2,6 +2,8 @@
 
 use strict;
 
+require File::Spec::Unix; # Done automatically by File::Spec
+
 my $escapedir;
 my $depth = 0;
 my $debug = 1;
@@ -36,16 +38,6 @@ sub escape {
   my($str) = splice(@_);
   $str =~ s/\//\\\//g;
   $str =~ s/\@/\\\@/g;
-  return $str;
-}
-
-sub dots {
-    my($dot) = @_;
-    my ($str) = "" ;
-    while ($dot > $reldir) {
-	$str = "../" . $str;
-	$dot -= 1;
-    }
   return $str;
 }
 
@@ -94,12 +86,14 @@ sub recurse {
       		my @newdir = split (/$escapedir/, $eachFile);
       		my @filename = split (/$pdir\//, $newdir[1]);
 		
-	      my $lnsource = dots($depth).$pdir."\/".$filename[1];
+	      my $lnsource = $pdir."\/".$filename[1];
 	      my $lndest = $zieldir.mknicename($newdir[1]);
 	      if ( $debug) { 
-		print "\tln -s $escapedir ".$lnsource." $lndest\n";
+		my $rel_path = File::Spec::Unix->abs2rel( $names[$n], $pdir ) ;
+		#print "\tRelPath: ".$rel_path."\n";
+		print "\tln -s \"$rel_path/$lnsource\" \"$lndest\"\n";
 		} else {
-      		my $mk_ln = qx(ln -s "$lnsource" "$lndest"); 
+      		my $mk_ln = qx(ln -s "$rel_path/$lnsource" "$lndest"); 
 		}
 	      $counter++;
 	      }
