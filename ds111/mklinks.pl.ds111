@@ -1,81 +1,126 @@
-#!/usr/bin/perl
-# cd /volume1/s100/
-# ./mklinks.pl 
+#!/usr/bin/perl -W
 
-sub ucwords
- {
-   $str = shift;
+use strict;
+
+require File::Spec::Unix; # Done automatically by File::Spec
+
+my $escapedir;
+my $debug = 0;
+
+# von welchen verzeichnissen
+#my @names = qw(/volume1/music/specials/ /volume1/music/mp31/ /volume1/music/mp32/ /volume1/music/mp33/ /volume1/music/mp34/);
+my @names = qw(/data/bck/testmp3/mp31/ /data/bck/testmp3/mp32/);
+#my @names = qw(/home/dorn/mp3/jd/);
+# wohin
+#my $zieldir = "/volume1/s100/";
+my $zieldir = "/data/bck/s100/";
+#my $zieldir = "/home/dorn/temp/s100/";
+# nicht diese verzeichnisse teilnamen gehen auch!
+my @ddir = qw(@eaDir hoerspiele karaoke benjamin_bluemchen wii);
+
+# link zaehler
+my $counter = 0;
+
+# fuer das @names array
+my $n = 0;
+
+sub mknicename
+{
+   my ($str) = shift;
+   $str =~ tr/_/ /;
    $str = lc($str);
    $str =~ s/\b(\w)/\u$1/g;
    return $str;
- }
-
-sub UPPER
-{
-       $str = shift;
-    $str =~ tr/_/ /;
-    $str = ucwords($str);
-       return $str;
 }
 
-# DEFINE AN ARRAY
-@names = qw(../music/mp31/ ../music/mp32/ ../music/mp33/ ../music/mp34/ ../music/specials/);
-#@names = qw(../musikarchiv/mp31/);
-$zieldir = "";
+sub escape {
+  my($str) = splice(@_);
+  $str =~ s/\//\\\//g;
+  $str =~ s/\(/\\\(/g;
+  $str =~ s/\)/\\\)/g;
+  $str =~ s/\`/\\\`/g;
+  $str =~ s/\'/\\\'/g;
+  $str =~ s/\ /\\\ /g;
+  $str =~ s/\@/\\\@/g;
+  return $str;
+}
 
-$debug = 0;
-# COUNTER - COUNTS EACH ROW
-$count = 1;
+sub inarray {
+   my($str) = @_;
+   my ($line) = "";
+   foreach $line (@ddir){
+   if ($str =~ m/$line/){
+      return 1;
+   } # end if
+   } # end foreach
+return 0;
+}
 
-# Variable wenn nur Files gelinkt werden. Nur einmal und nicht jedesmal
-# wenn das Direktory geprueft wird.
-$file = 0;
-# COUNTS EACH ELEMENT OF THE ARRAY
-$n = 0;
+sub recurse {
+  my($path,$pdir) = @_;
 
-# USE THE SCALAR FORM OF ARRAY
-while ($names[$n]) {
-    opendir(DIRHANDLE,"$names[$n]")||die "ERROR: can not read current directory\n";
-    foreach (readdir(DIRHANDLE)){
-      #print"\n";
-      if ( not ( $_ eq "." or $_ eq ".." or $_ eq "lost+found" ) ) {
-      $artist = $_;
-      $ArtistName = UPPER($_);
-      #$ArtistName =~ tr/_/ /;
-      #$ArtistName = ucwords($ArtistName);
+  ## append a trailing / if it's not there
+  $path .= '/' if($path !~ /\/$/);
+  
+  ## print the directory being searched
+  #print "### ", $path," - ", $pdir, "\n";
 
-	if ( -d "$names[$n]$_") {
-        	if ( not -d "$zieldir$ArtistName" ) {
-        	    if ( $debug) { print "mkdir -p \"$zieldir$ArtistName\"\n"; }
-        	    if ( not $debug) { my $mk_dir = qx(mkdir -p "$zieldir$ArtistName"); }
-        	}
-        	opendir(DIRHANDLE2,"$names[$n]$_")||die "ERROR: can not read current directory\n";
-        	foreach (readdir(DIRHANDLE2)){
-        	 if ( not ( $_ eq "." or $_ eq ".." ) ) {
-        	    if ( -d "$names[$n]$artist/$_") {
-        		$AlbumName = UPPER($_);
-        		#print "Album: $AlbumName\n";
-        		if ( $debug) { print "cd \"$zieldir$ArtistName\"\nln -s \"../$names[$n]$artist/$_\" \"$AlbumName\" \n"; }
-        		if ( not $debug) { my $ln_befehl = qx(cd "$zieldir$ArtistName" && ln -s "../$names[$n]$artist/$_" "$AlbumName"); }
-        		$count++;
-        	    } elsif ( $file != 1 ) {
-        		if ( $debug) { print "###FILE###\ncd \"$zieldir$ArtistName\"\nln -s ../$names[$n]$artist/* \".\"\n"; }
-        		if ( not $debug) { my $ln_befehl = qx(cd "$zieldir$ArtistName" && ln -s ../$names[$n]$artist/* .); }
-			$file = 1;
-        		#print "File $names[$n]$artist/$_";
-        	    }
-        	}
-        	}
-        	closedir DIRHANDLE2;
-		$file = 0;
+  ## loop through the files contained in the directory
+  for my $eachFile (glob($path.'*')) {
 
-        		    #print "ln -s $names[$n]$_/* \"$zieldir$ArtistName\" \n"; # if (/$ARGV[0]/io);
-        		    #my $ln_befehl = qx(ln -s $names[$n]$_/* "$zieldir$ArtistName");
+      if ( $debug) { 
+      	print "# eachFile \"".$eachFile."\"\n";
+	} 
+
+    ## if the file is a directory
+    if( -d $eachFile and not ( inarray($eachFile) ) ) {
+      ## pass the directory to the routine &( recursion )
+
+      if ( $debug) { 
+      	print "## isDir \"".$eachFile."\"\n";
+	} 
+
+      my @newdir = split (/$escapedir/, $eachFile);
+      my $tmpdirname = mknicename($newdir[1]);
+      
+      if ( $debug) { 
+      	print "## mkdir \"".$zieldir.$tmpdirname."\"\n";
+	} else {
+      	my $mk_dir = qx(mkdir -p "$zieldir$tmpdirname");
 	}
-      }
+      recurse($eachFile, $newdir[1]);
+    } else {
+	    if( not ( inarray($eachFile) ) and ( $eachFile =~ m/\.(mp3|MP3|ogg|jpg)/ ) ) {
+      if ( $debug) { 
+      	print "### isFile \"".$eachFile."\"\n";
+	} 
+
+	      ## print the file ... tabbed for readability
+	      my ($volume,$directories,$fileX) = File::Spec::Unix->splitpath( $eachFile );
+	      my $lnsource = $pdir."\/".$fileX;
+	      my $lndest = $zieldir.mknicename($pdir)."/".$fileX;
+	      my $rel_path = File::Spec::Unix->abs2rel( $names[$n], $pdir ) ;
+	      if ( $debug) { 
+	        print "### Filename: $fileX\n";
+	        print "### edir: $names[$n]\n### dirs: $directories\n### path: $pdir\n### relpath: $rel_path\n";
+		print "### ln -s \"$rel_path/$lnsource\" \"$lndest\"\n";
+		} else {
+		my $lns = escape("$rel_path/$lnsource");
+		my $lnd = escape($lndest);
+		#print "### ln -s $lns $lnd\n";
+      		my $mk_ln = qx(ln -s $lns $lnd); 
+      		#my $mk_ln = qx(ln -s "$rel_path/$lnsource" "$lndest"); 
+		}
+	      $counter++;
+	      }
     }
-    closedir DIRHANDLE;
-    #print "Dirs: $count in $names[$n] ArrayNummer: $n\n";
-    $n++;
+  }
 }
-print "Insgesamt $count symblische Links\n";
+
+while ($names[$n]) {
+$escapedir = escape($names[$n]);
+recurse($names[$n], "");
+$n++;
+}
+
+print "Links gemacht: ", $counter, "\n";
