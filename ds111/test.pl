@@ -8,7 +8,7 @@ my $escapedir;
 my $debug = 0;
 
 # von welchen verzeichnissen
-#my @names = qw(/volume1/music/specials/ /volume1/music/mp31/ /volume1/music/mp32/ /volume1/music/mp33/) /volume1/music/mp34/;
+#my @names = qw(/volume1/music/specials/ /volume1/music/mp31/ /volume1/music/mp32/ /volume1/music/mp33/ /volume1/music/mp34/);
 my @names = qw(/data/bck/testmp3/mp31/ /data/bck/testmp3/mp32/);
 #my @names = qw(/home/dorn/mp3/jd/);
 # wohin
