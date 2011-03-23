@@ -1,0 +1,4 @@
+AuthName "Administrationsseite"
+AuthType Basic
+AuthUserFile /var/www/download/sms/admin/.htpasswd
+Require valid-user
