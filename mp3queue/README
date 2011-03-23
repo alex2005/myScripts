@@ -1,0 +1,59 @@
+#
+#CREATE TABLE `mp3` (
+#  `id` int(11) NOT NULL auto_increment,
+#  `filename` varchar(255) default NULL,
+#  `artist` varchar(255) default NULL,
+#  `title` varchar(255) default NULL,
+#  `album` varchar(255) default NULL,
+#  `track` tinyint(2) default NULL,
+#  `year` smallint(4) default NULL,
+#  `genre` varchar(255) default NULL,
+#  `path` varchar(255) default NULL,
+#  PRIMARY KEY  (`id`),
+#  UNIQUE KEY `path` (`path`)
+#) TYPE=MyISAM;
+
+#http://s23.org/wiki/HowTo/Read_Mp3_ID3_tags_into_Sql_Database
+# %f und konsorten muessten escaped werden..
+
+#/bin/bash
+# good ones to outfile
+outfile="mp3.sql"
+
+# errors to error file (files without id tag)
+errfile="mp3.err"
+
+# adjust your path here
+find /data/bck/mp3/ -mtime -2 -name \*.mp3 -print | while read file
+#find /data/bck/mp3/avril_lavigne/goodbye_lullaby/ -name \*.mp3 -print | while read file
+
+do
+
+mp3info -p "insert into mp3 (filename,artist,album,track,year,genre,path,title) VALUES 
+(\"%f\",\"%a\",\"%l\",\"%n\",\"%y\",\"%g\",\"%F\"" "$file" 1>>$outfile 2>>$errfile
+
+title=`mp3info -p "%t" "$file"`
+echo -n ',"' 1>>$outfile 2>>$errfile
+echo -n $(echo $title |sed 's/\"/\\\"/g') 1>>$outfile 2>>$errfile
+echo -n '");' 1>>$outfile 2>>$errfile
+
+echo "" >> $outfile
+
+# als array
+#title=`mp3info -p "%t" "$file"`
+
+
+#array=("09_die_maus_crack.mp3" "Mundstuhl" "Die Maus: Crack" "Heul Doch!" "" "2001" "Comedy" "/data/bck/mp3/mundstuhl/heul_doch/09_die_maus_crack.mp3")
+#array=("28_c-_und_f-hoernchen_kuehe_aergern.mp3" "Mundstuhl" "C- und F-Hoernchen "Kuehe aerg" "Heul Doch!" "" "2001" "Comedy" "/data/bck/mp3/mundstuhl/heul_doch/28_c-_und_f-hoernchen_kuehe_aergern.mp3")
+
+#echo $array
+#echo ${array[2]}
+#echo $title >> test.sql
+#echo $(echo $title |sed 's/\"/\\\"/g') >> test.sql
+
+done
+
+# mysql -uroot -ptest musik < mp3.sql
+
+# DELETE FROM mp3 WHERE path LIKE "%mundstuhl/heul_doch%";
+# $(whois $LINE |sed "s/'/\\\'/")
