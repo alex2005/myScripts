@@ -14,3 +14,5 @@ if [ -e ${artist}_-_${album}_a.jpg ]; then
 fi
 
 echo "moving $1 to ${artist}_-_${album}_a.jpg"
+move=`mv $1 ${artist}_-_${album}_a.jpg`
+
