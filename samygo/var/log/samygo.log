@@ -1,0 +1,5 @@
+19700101-000021 Start Record to Network Share script (80_80_record_to_nwshare.init)
+19700101-000021 Search for mount point of pvrimage...
+19700101-000041 pvrimage mount point is /dtv/usb/sdc
+19700101-000041 Bind remount of /dtv/usb/sdb/nfs/mediaserver01.shareskills.org/_home_remi_localdata_media/tv01/pvr_record on /dtv/usb/sdc... OK
+19700101-000041 PVR on server mediaserver01.shareskills.org is now ready in localpath /dtv/usb/sdc

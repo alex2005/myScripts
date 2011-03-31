@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+# © Copyright 1996-2010, ZsoltTech.Com
+#       by Ser Lev Arris <arris@ZsoltTech.Com>
+#
+#       donated for the SamyGo Project
+#       http://samygo.sourceforge.net/
+#
+#       Version: SamyGO svn $Id: 03_03_nfsmount.init 1069 2011-01-03 16:47:24Z arris69 $
+#
+# Modified by Remigio Conti 20110110 to allow mount from list of more than one fixed server
+#
+
+. /dtv/SGO.env
+# sleep 9
+
+#
+# NFS share in the form of:
+#
+# SHARE_n='<SERVER NAME or IP>:<SHARE>'
+#
+# For multiple share on the same server use multiple entry with the same server name.
+#
+
+SHARE_1='192.168.1.29:/volume1/samsung'
+#SHARE_2='fileserver01.shareskills.org:/var/landata/photo'
+
+FR_NAME="NFS Server"
+# M_OPTS="soft,udp,async,nolock,rsize=32768,wsize=8192"
+# M_OPTS="rw,soft,udp,nolock,rsize=32768,wsize=32768"
+# M_OPTS="soft,tcp,nolock,rsize=32768,wsize=32768"
+# M_OPTS="soft,tcp,nolock,rsize=8192,wsize=8192"
+M_OPTS="soft,tcp,nolock"
+
+DEST_DIR=$MOUNT_PATH/nfs
+
+do_mount()
+{
+#		$(echo -e "[sdg]\nVendor : NfsMount\nProduct : $FR_NAME\n\
+#Serial : Q80VQLFG\nDevpath : 7\nLun : 0\nMountDir : $DEST_DIR\nFileSystem : vfat\n" >> /dtv/usb/log)
+	
+		M_POINT="$DEST_DIR/$1/$(echo -n "$2" | sed -e "s/\//_/g")"
+		mkdir -p "$M_POINT" 
+		if [ `cat /proc/mounts | grep -c "$M_POINT"` -lt "1" ] ; then
+			/bin/busybox mount -o "$M_OPTS" "$1:$2" "$M_POINT"
+			if [ $? = 0 ]; then
+			    echo "Share $1:$2 successfully mounted on $M_POINT" 
+			  else
+			    echo "Error during mount of $1:$2 on $M_POINT"
+			fi
+		else
+			echo "Share $1:$2 is already mounted!"
+		fi
+}
+
+get_shares()
+{
+	ENDARRAY=false
+	N=1
+	while [ $ENDARRAY = false ]
+	   do
+	      eval SHARE=\${SHARE_${N}}
+	      if [ -z "$SHARE" ]; then
+  	          ENDARRAY=true
+   	        else
+     	          SERVER=`echo "$SHARE"|cut -d ':' -f1`
+     	          SHPATH=`echo "$SHARE"|cut -d ':' -f2`
+     	          echo -n "Check if server $SERVER is reachable..."
+     	          showmount --no-header -e $SERVER 1>/dev/null 2>&1
+     	          if [ $? = 0 ]; then
+     	             echo 'ok'
+     	             do_mount "$SERVER" "$SHPATH"
+     	           else
+     	             echo 'NOT reachable skip!'
+     	          fi
+       		  let N=N+1
+       	      fi
+           done
+}
+
+
+case $1 in 
+	start)
+	# for systems with modular nfs kernel support
+	insmod $MOD_DIR/kernel/net/sunrpc/sunrpc.ko
+	insmod $MOD_DIR/kernel/fs/lockd/lockd.ko
+	insmod $MOD_DIR/kernel/fs/nfs_common/nfs_acl.ko
+	insmod $MOD_DIR/kernel/fs/nfs/nfs.ko
+	get_shares
+	;;
+	stop)
+	# may can fail if device access the mount from content library
+	# for i in $(cat /proc/mounts | grep nfs | cut -d " " -f2) ; do
+	for i in $(cat /proc/mounts | grep "$DEST_DIR" | sed 's/^\(.*\) \(.*\) nfs .*/\2/') ; do
+		/bin/busybox umount $i
+	done
+	;;
+	status)
+	/bin/mount | grep "$DEST_DIR"
+	;;
+	*)
+	echo "Usage: $0 {start|stop|status}" 1>&2
+	exit 0
+	;;
+esac
