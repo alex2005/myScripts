@@ -1,0 +1,110 @@
+#!/bin/sh
+#
+# © Copyright 1996-2010, ZsoltTech.Com
+#       by Ser Lev Arris <arris@ZsoltTech.Com>
+#
+#       donated for the SamyGo Project
+#       http://samygo.sourceforge.net/
+#
+#       Version: SamyGO svn $Id: 02_04_vusb.init 1070 2011-01-03 17:28:08Z arris69 $
+#
+# TODO: more sysv style, more error handling
+#
+# Modified by Remigio Conti 20110110 to support PVR Recording over network
+#
+
+. /dtv/SGO.env
+
+case $1 in 
+	start)
+	# on C series: can't open '/proc/scsi/scsi': No such file or directory?
+#	if [ `cat /proc/scsi/scsi | grep -c "Type:"` -lt "1" ] ; then
+		
+		# create unsusable dummy device
+		# dd if=/dev/zero of=/dtv/vusb bs=512 count=4
+
+		# create usable vfat image
+		# we don't need to mess around with log and usblog
+		# also no limits to usb mounts
+		# we need to find mount point, on most devices it's sda
+		# but it will differ in some situations
+		mkfs.vfat -C /dtv/vusb 500
+		# mkfs.vfat -C /dtv/vusb $(($(df -k /dtv | grep dtv | sed -e 's,^\(.*\) \(.*\) \( .*% /dtv\),\2,') / 3 ))
+		
+		# TODO: for recording on c series xfs stuff.
+		# /dev/stl0/21            392.3M    142.9M    249.4M  36% /mtd_rwcommon
+		# needs to be adapted:
+		# http://sourceforge.net/apps/phpbb/samygo/viewtopic.php?f=12&p=10567#p10567
+		#
+		# dd if=/dev/zero of=/mtd_rwcommon/vusb bs=1M count=16
+		# /sbin/mkfs.xfs -f -d name=/mtd_rwcommon/vusb
+		# ln -s /mtd_rwcommon/vusb /dtv/
+		# OBSOLETE: gone to 80_80_record_to_nwshare.init 
+
+		# create usable virtual device (don't store data on it what you need tomorrow too!!)
+		# dd if=/dev/zero of=/dtv/vusb bs=1M count=2
+		# mkfs.ext3 -q -F -m 0 -b 1024 /dtv/vusb
+
+		# insmod $SYSROOT/lib/modules/treasure/dummy_hcd.ko
+		insmod $MOD_DIR/kernel/drivers/usb/gadget/dummy_hcd.ko
+		sleep 2
+		# insmod $SYSROOT/lib/modules/treasure/g_file_storage.ko
+	  	
+	  	GFILESTORAGE='/dtv/vusb'
+	  	PVRIMAGE="$SYSROOT/pvrimage"
+	  	
+	  	if [ -e $PVRIMAGE ]; then
+	  	  GFILESIZE=`du $PVRIMAGE |cut -f1`
+	  	  if [ $GFILESIZE -ge 1536000 ]; then  	
+                     GFILESTORAGE="$GFILESTORAGE,$PVRIMAGE"
+                     echo "Found pvrimage file $PVRIMAGE size=$GFILESIZE KByte, so enabling PVR Record over NFS"
+                   else 
+                     echo "Found pvrimage file $PVRIMAGE size=$GFILESIZE KByte, but size is less than required (1536000 KBYTE), so PVR Record over NFS will not be enabled"    
+               	  fi
+               	 else
+               	  echo "pvrimage $PVRIMAGE NOT found, so PVR Record over NFS will not be enabled"
+               	fi
+               	
+		insmod $MOD_DIR/kernel/drivers/usb/gadget/g_file_storage.ko file="$GFILESTORAGE"
+		sleep 3
+		
+		# find vusb in /sys
+		# and set a variable for mount point
+		
+		FOUND=false
+		SAMYGODEVS=''
+		for i in /sys/block/sd?/device/model ; do
+	  		if [ `cat $i | grep -c "SamyGO Virt"` -gt "0" ]; then
+	  		   CURDEV="`echo $i | sed 's/^\/.*\(sd.\)\/.*/\1/g'`"
+	  		   SAMYGODEVS="$SAMYGODEVS /dev/$CURDEV"
+	  		   if [ $FOUND = false ]; then
+				echo "found gadget at: $i"
+				dev=$CURDEV
+				echo "scsidev: $dev"
+				FOUND=true
+			   fi
+			else
+				echo "real storage device at: $i"
+			fi
+		done
+		SAMYGODEVS=`echo $SAMYGODEVS|sed 's/^[[:space:]]//'`
+
+#	else
+#		echo "Storage Device is present"
+#	fi
+	sed -i -e "s,MountPlaceholder,/dtv/usb/$dev," /dtv/SGO.env
+	echo "SAMYGODEVS=\"$SAMYGODEVS\"" >> /dtv/SGO.env
+	;;
+	stop)
+	# what's about umount?
+	rmmod g_file_storage
+	rmmod dummy_hcd
+	;;
+	status)
+	cat /sys/block/sd?/device/model
+	;;
+	*)
+	echo "Usage: $0 {start|stop|status}" 1>&2
+	exit 0
+	;;
+esac
