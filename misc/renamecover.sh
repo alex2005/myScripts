@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -e $1 ]; then
+if [ ! -e "$1" ]; then
 	echo "Usage: $0 covername.jpg "
 	exit
 fi
@@ -14,5 +14,5 @@ if [ -e ${artist}_-_${album}_a.jpg ]; then
 fi
 
 echo "moving $1 to ${artist}_-_${album}_a.jpg"
-move=`mv $1 ${artist}_-_${album}_a.jpg`
+move=`mv "$1" ${artist}_-_${album}_a.jpg`
 
