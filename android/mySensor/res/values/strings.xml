@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, mySensor!</string>
+    <string name="app_name">Sensors</string>
+    <string name="xachsetitle">X</string>
+    <string name="yachsetitle">Y</string>
+    <string name="zachsetitle">Z</string>
+    <string name="xwinkeltitle">XW</string>
+    <string name="ywinkeltitle">YW</string>
+    <string name="zwinkeltitle">ZW</string>
+</resources>

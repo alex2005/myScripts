@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<TextView  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/hello"
+    />
+<TextView
+	android:id="@+id/xachse"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/xachsetitle"
+    />
+<TextView
+	android:id="@+id/x"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    />
+<TextView
+	android:id="@+id/yachse"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/yachsetitle"
+    />
+<TextView
+	android:id="@+id/y"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    />
+<TextView
+	android:id="@+id/zachse"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/zachsetitle"
+    />
+<TextView
+	android:id="@+id/z"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    />
+<TextView
+	android:id="@+id/xwinkel"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/xwinkeltitle"
+    />
+<TextView
+	android:id="@+id/xw"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    />
+<TextView
+	android:id="@+id/ywinkel"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/zwinkeltitle"
+    />
+<TextView
+	android:id="@+id/yw"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    />
+<TextView
+	android:id="@+id/zwinkel"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/zwinkeltitle"
+    />
+<TextView
+	android:id="@+id/zw"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    />
+
+</LinearLayout>
