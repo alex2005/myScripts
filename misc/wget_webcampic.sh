@@ -3,6 +3,9 @@
 # a shell script used to download a specific url.
 # this is executed from a crontab entry every day or
 # a while(true) loop with sleep 60
+# while (true); do ./wget_webcampic.sh ; sleep 60; done
+# convert -adjoin -delay 2 webcam.20110717_08* animation.gif
+
 
 DIR=/tmp
 
