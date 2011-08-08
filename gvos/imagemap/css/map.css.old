@@ -1,0 +1,97 @@
+/*---------------------------------------------------------------
+	Stylesheet for the demo imagemap_rollover
+	Author:		Gabriel Svennerberg
+	Email:		gabriel@svennerberg.com
+	Web:		http://www.svennerberg.com
+	Created:	2008-08-16
+ ---------------------------------------------------------------*/
+
+/* Map
+---------------------------------------------------------------*/
+
+body
+{
+	background-color:#004d9c;
+}
+
+#text {
+	color:#0075b5;
+	text-align:center;
+}
+
+#map {
+	position: relative;
+	width: 1012px;
+	height: 666px;
+}
+#transparent_map {
+	position: absolute;
+	z-index: 30;
+	width: 1012px;
+	height: 666px;
+	border: none;
+}
+#map ul {
+	list-style: none;
+}
+#map li {
+	position: absolute;
+	z-index: 20;
+	text-indent: -1000em;
+	display: none;
+}
+#news {
+	background: url(../img/newst.png) no-repeat;
+	width: 492px;
+	height: 162px;
+	top: 20px;
+	left: 10px;
+}
+#b0 {
+	background: url(../img/b0t.png) no-repeat;
+	width: 386px;
+	height: 55px;
+	top: 314px;
+	left: 289px;
+}
+#b1 {
+	background: url(../img/b1t.png) no-repeat;
+	width: 56px;
+	height: 55px;
+	top: 412px;
+	left: 214px;
+}
+
+#b2 {
+	background: url(../img/b2t.png) no-repeat;
+	width: 61px;
+	height: 60px;
+	top: 405px;
+	left: 322px;
+}
+
+#b3 {
+	background: url(../img/b3t.png) no-repeat;
+	width: 69px;
+	height: 58px;
+	top: 403px;
+	left: 438px;
+}
+
+#b4 {
+	background: url(../img/b4t.png) no-repeat;
+	width: 65px;
+	height: 54px;
+	top: 401px;
+	left: 552px;
+}
+/* Tooltip
+---------------------------------------------------------------
+.tooltip {
+	background: url(../img/tooltip-bg.jpg);
+	padding: 3px 6px;
+	border: 1px solid #ff0;
+	position: absolute;
+	z-index: 25;
+}
+*/

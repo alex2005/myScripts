@@ -1,0 +1,75 @@
+/*---------------------------------------------------------------
+	Stylesheet for the demo imagemap_rollover
+	Author:		Gabriel Svennerberg
+	Email:		gabriel@svennerberg.com
+	Web:		http://www.svennerberg.com
+	Created:	2008-08-16
+ ---------------------------------------------------------------*/
+
+/* Map
+---------------------------------------------------------------*/
+
+body
+{
+	background-color:#004d9c;
+}
+
+#text {
+	color:#0075b5;
+	text-align:center;
+}
+
+#map {
+	position: relative;
+	width: 805px;
+	height: 526px;
+}
+#transparent_map {
+	position: absolute;
+	z-index: 30;
+	width: 805px;
+	height: 526px;
+	border: none;
+}
+#map ul {
+	list-style: none;
+}
+#map li {
+	position: absolute;
+	z-index: 20;
+	text-indent: -1000em;
+	display: none;
+}
+#l0 {
+	background: url(../img/neuigkeiten.png) no-repeat;
+	width: 805px;
+	height: 526px;
+	top: 0px;
+	left: 0px;
+}
+#l2 {
+	background: url(../img/klassenstufen.png) no-repeat;
+        width: 805px;
+        height: 526px;
+        top: 0px;
+	left: 0px;
+
+}
+#l1 {
+	background: url(../img/kommandobruecke.png) no-repeat;
+        width: 805px;
+	height: 526px;
+	top: 0px;
+        left: 0px;
+}
+
+/* Tooltip
+---------------------------------------------------------------
+.tooltip {
+	background: url(../img/tooltip-bg.jpg);
+	padding: 3px 6px;
+	border: 1px solid #ff0;
+	position: absolute;
+	z-index: 25;
+}
+*/

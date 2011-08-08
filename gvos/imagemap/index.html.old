@@ -1,0 +1,53 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/map.css" type="text/css" media="screen" />
+<title>ImageMap Test GvOS</title>
+<!--script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script-->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/map_jquery_fade.js"></script>
+</head>
+
+<body>
+
+<h1 id="text">Graf von Oberndorff Schule</h1>
+
+<div id="map">
+	<img src="img/transp.gif" id="transparent_map" alt="" usemap="#map" />
+	<img src="img/index.png" alt="" />
+	<map name="map" id="map">
+	<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+	<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+	<!-- #$-:Please do not edit lines starting with "#$" -->
+	<!-- #$VERSION:2.3 -->
+	<!-- #$AUTHOR:dorn -->
+	<area id="area_news" shape="poly" coords="6,87,79,96,126,80,160,48,217,83,241,72,204,21,143,18,93,63,47,69,25,80" alt="Neuigkeiten" href="wb/index.php">
+	<area id="area_news" shape="poly" coords="171,68,148,88,198,131,244,118,282,102,349,54,431,64,469,98,460,156,487,141,497,107,500,77,482,50,442,26,328,24,251,83,209,101" alt="Neuigkeiten" href="wb/index.php" />
+	<area id="area_news" shape="poly" coords="350,72,314,99,344,101,384,101,419,114,427,158,424,180,441,177,447,125,440,95,410,82" alt="Neuigkeiten" href="wb/index.php" />
+	<area id="area_b1" shape="poly" coords="227,414,213,442,245,467,269,440,269,411" alt="Klassestufe 1" href="b1" />
+	<area id="area_b2" shape="poly" coords="330,406,322,437,348,465,377,446,382,415,358,405" alt="Klassestufe 2" href="b2" />
+	<area id="area_b3" shape="poly" coords="467,460,499,447,505,419,502,410,457,403,436,430" alt="Klassestufe 3" href="b3" />
+	<area id="area_b4" shape="poly" coords="588,453,607,437,616,413,578,399,551,432" alt="Klassestufe 4" href="b4" />
+	<area id="area_b0" shape="poly" coords="289,328,292,367,338,366,334,324" alt="Br&uuml;cke" href="b0" />
+	<area id="area_b0" shape="poly" coords="364,326,363,369,468,364,453,324" alt="Br&uuml;cke" href="b0" />
+	<area id="area_b0" shape="poly" coords="491,365,565,360,560,315,489,317" alt="Br&uuml;cke" href="b0" />
+	<area id="area_b0" shape="poly" coords="597,360,673,359,647,313,580,314" alt="Br&uuml;cke" href="b0" />
+	</map>
+
+	<ul>
+		<li id="news"><a href="wb/index.php">Neuigkeiten</a></li>
+		<li id="b0"><a href="b0.html">b0</a></li>
+		<li id="b1"><a href="b1.html">b1</a></li>
+		<li id="b2"><a href="b2.html">b2</a></li>
+		<li id="b3"><a href="b3.html">b3</a></li>
+		<li id="b4"><a href="b4.html">b4</a></li>
+	</ul>
+</div>
+
+<p id="text"></p>
+
+</body>
+</html>
+
