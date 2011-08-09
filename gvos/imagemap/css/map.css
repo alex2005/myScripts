@@ -47,6 +47,13 @@ body
 	top: 0px;
 	left: 0px;
 }
+#l1 {
+	background: url(../img/kommandobruecke.png) no-repeat;
+        width: 805px;
+	height: 526px;
+	top: 0px;
+        left: 0px;
+}
 #l2 {
 	background: url(../img/klassenstufen.png) no-repeat;
         width: 805px;
@@ -55,11 +62,25 @@ body
 	left: 0px;
 
 }
-#l1 {
-	background: url(../img/kommandobruecke.png) no-repeat;
+#l3 {
+        background: url(../img/grafenpost.png) no-repeat;
         width: 805px;
-	height: 526px;
-	top: 0px;
+        height: 526px;
+        top: 0px;
+        left: 0px;
+}
+#l4 {
+        background: url(../img/impressum.png) no-repeat;
+        width: 805px;
+        height: 526px;
+        top: 0px;
+        left: 0px;
+}
+#l5 {
+        background: url(../img/gemeinde.png) no-repeat;
+        width: 805px;
+        height: 526px;
+        top: 0px;
         left: 0px;
 }
 
