@@ -1,0 +1,14 @@
+
+# hinzufuegen des handys
+KERNEL=="ttyACM0", SUBSYSTEM=="tty", ACTION=="add", RUN+="/usr/bin/logger -t SMS PlugInSMSDevice"
+KERNEL=="ttyACM0", SUBSYSTEM=="tty", ACTION=="add", RUN+="/etc/init.d/smstools start"
+
+
+# entfernen des handys
+# w880i
+SUBSYSTEM=="tty", ACTION=="remove", ATTRS{idVendor}=="0fce", ATTRS{idProduct}=="d068", RUN+="/usr/bin/logger -t SMS PlugOutSMSDevice"
+SUBSYSTEM=="tty", ACTION=="remove", ATTRS{idVendor}=="0fce", ATTRS{idProduct}=="d068", RUN+="/etc/init.d/smstools stop"
+
+# k810i
+SUBSYSTEM=="tty", ACTION=="remove", ATTRS{idVendor}=="0fce", ATTRS{idProduct}=="d0a1", RUN+="/usr/bin/logger -t SMS PlugOutSMSDevice"
+SUBSYSTEM=="tty", ACTION=="remove", ATTRS{idVendor}=="0fce", ATTRS{idProduct}=="d0a1", RUN+="/etc/init.d/smstools stop"
