@@ -8,12 +8,11 @@ my $escapedir;
 my $debug = 0;
 
 # von welchen verzeichnissen
-#my @names = qw(/volume1/music/specials/ /volume1/music/mp31/ /volume1/music/mp32/ /volume1/music/mp33/ /volume1/music/mp34/);
-my @names = qw(/data/bck/testmp3/mp31/ /data/bck/testmp3/mp32/);
+my @names = qw(/volume1/music/specials/ /volume1/music/mp31/ /volume1/music/mp32/ /volume1/music/mp33/ /volume1/music/mp34/);
+#my @names = qw(/home/mdorn/data/bck/mp3/);
 #my @names = qw(/home/dorn/mp3/jd/);
 # wohin
-#my $zieldir = "/volume1/s100/";
-my $zieldir = "/data/bck/s100/";
+my $zieldir = "/volume1/s100/";
 #my $zieldir = "/home/dorn/temp/s100/";
 # nicht diese verzeichnisse teilnamen gehen auch!
 my @ddir = qw(@eaDir hoerspiele karaoke benjamin_bluemchen wii);
@@ -41,7 +40,10 @@ sub escape {
   $str =~ s/\`/\\\`/g;
   $str =~ s/\'/\\\'/g;
   $str =~ s/\ /\\\ /g;
+  $str =~ s/\;/\\\;/g;
   $str =~ s/\@/\\\@/g;
+  $str =~ s/\&/\\\&/g;
+  $str =~ s/\+/\\\+/g;
   return $str;
 }
 
@@ -103,7 +105,7 @@ sub recurse {
 	      if ( $debug) { 
 	        print "### Filename: $fileX\n";
 	        print "### edir: $names[$n]\n### dirs: $directories\n### path: $pdir\n### relpath: $rel_path\n";
-		print "### ln -s \"$rel_path/$lnsource\" \"$lndest\"\n";
+				print "### ln -s \"$rel_path/$lnsource\" \"$lndest\"\n";
 		} else {
 		my $lns = escape("$rel_path/$lnsource");
 		my $lnd = escape($lndest);
