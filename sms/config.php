@@ -4,7 +4,7 @@
 	
 	$MySQL_Host="localhost";			// Your MySQL-Host
 	$MySQL_User="dorn";		// Your MySQL-Username
-	$MySQL_Passw="test";		// Your MySQL-Password
+	$MySQL_Passw="";		// Your MySQL-Password
 	$db="sms";				// Database to be used
 	
 	// Account settings
